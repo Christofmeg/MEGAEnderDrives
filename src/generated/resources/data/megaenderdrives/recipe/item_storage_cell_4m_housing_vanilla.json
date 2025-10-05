@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "megacells"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "megaenderdrives:ender_item_cell_housing"
+    },
+    {
+      "item": "megaenderdrives:cell_component_4m"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "megaenderdrives:item_storage_cell_4m"
+  }
+}

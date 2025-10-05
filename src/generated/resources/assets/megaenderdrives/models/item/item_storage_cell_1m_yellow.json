@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "megaenderdrives:item/item_storage_cell_1m",
+    "layer1": "megaenderdrives:item/ender_disk_led_yellow"
+  }
+}
