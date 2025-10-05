@@ -25,7 +25,6 @@ public class MEGAEnderDrives {
     }
 
 // TODO separate frequency from items and fluids
-// TODO guideME
 
     @SubscribeEvent
     public void onRightClickItem(PlayerInteractEvent.RightClickItem event) {

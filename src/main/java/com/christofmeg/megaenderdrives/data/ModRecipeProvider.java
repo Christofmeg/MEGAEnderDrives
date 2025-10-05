@@ -2,8 +2,6 @@ package com.christofmeg.megaenderdrives.data;
 
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
-import appeng.core.definitions.ItemDefinition;
-import appeng.items.materials.MaterialItem;
 import com.christofmeg.megaenderdrives.CommonConstants;
 import com.christofmeg.megaenderdrives.init.ItemRegistry;
 import com.glodblock.github.extendedae.common.EAESingletons;
@@ -184,12 +182,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         makeMEGAEnderCell(ItemRegistry.ENDER_DISK_64M, ItemRegistry.ENDER_STORAGE_COMPONENT_64M, recipeOutput);
         makeMEGAEnderCell(ItemRegistry.ENDER_DISK_256M, ItemRegistry.ENDER_STORAGE_COMPONENT_256M, recipeOutput);
 
-        makeEnderCellHousing(ItemRegistry.ENDER_ITEM_CELL_HOUSING, AEItems.SKY_DUST, recipeOutput);
+        makeEnderCellHousing(recipeOutput);
     }
 
-    private void makeEnderCellHousing(DeferredHolder<Item, ? extends Item> housing, ItemDefinition<MaterialItem> hasItem, RecipeOutput output) {
+    private void makeEnderCellHousing(RecipeOutput output) {
         // Vanilla
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, housing.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ((DeferredHolder<Item, ? extends Item>) ItemRegistry.ENDER_ITEM_CELL_HOUSING).get())
                 .pattern("aba")
                 .pattern("c c")
                 .pattern("ded")
@@ -198,16 +196,16 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('c', AEItems.SKY_DUST)
                 .define('d', Tags.Items.INGOTS_NETHERITE)
                 .define('e', Tags.Items.CHESTS_ENDER)
-                .unlockedBy(String.format("has_%s", hasItem.id().getPath()), has(hasItem.get()))
+                .unlockedBy(String.format("has_%s", AEItems.SKY_DUST.id().getPath()), has(AEItems.SKY_DUST.get()))
                 .save(output.withConditions(
                                 not(modLoaded("megacells")),
                                 not(modLoaded("extendedae")),
                                 not(modLoaded("advanced_ae"))
-                        ), String.format("%s_vanilla", housing.getId())
+                        ), String.format("%s_vanilla", ItemRegistry.ENDER_ITEM_CELL_HOUSING.getId())
                 );
 
         // Mega
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, housing.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ((DeferredHolder<Item, ? extends Item>) ItemRegistry.ENDER_ITEM_CELL_HOUSING).get())
                 .pattern("aba")
                 .pattern("c c")
                 .pattern("ded")
@@ -216,15 +214,15 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('c', AEItems.SKY_DUST)
                 .define('d', MEGAItems.SKY_STEEL_INGOT)
                 .define('e', Tags.Items.CHESTS_ENDER)
-                .unlockedBy(String.format("has_%s", hasItem.id().getPath()), has(hasItem.get()))
+                .unlockedBy(String.format("has_%s", AEItems.SKY_DUST.id().getPath()), has(AEItems.SKY_DUST.get()))
                 .save(output.withConditions(
                                 modLoaded("megacells"),
                                 not(modLoaded("advanced_ae"))
-                        ), String.format("%s_mega", housing.getId())
+                        ), String.format("%s_mega", ItemRegistry.ENDER_ITEM_CELL_HOUSING.getId())
                 );
 
         // Extended
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, housing.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ((DeferredHolder<Item, ? extends Item>) ItemRegistry.ENDER_ITEM_CELL_HOUSING).get())
                 .pattern("aba")
                 .pattern("c c")
                 .pattern("ded")
@@ -233,16 +231,16 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('c', AEItems.SKY_DUST)
                 .define('d', EAESingletons.ENTRO_BLOCK)
                 .define('e', Tags.Items.CHESTS_ENDER)
-                .unlockedBy(String.format("has_%s", hasItem.id().getPath()), has(hasItem.get()))
+                .unlockedBy(String.format("has_%s", AEItems.SKY_DUST.id().getPath()), has(AEItems.SKY_DUST.get()))
                 .save(output.withConditions(
                                 modLoaded("extendedae"),
                                 not(modLoaded("megacells")),
                                 not(modLoaded("advanced_ae"))
-                        ), String.format("%s_extended", housing.getId())
+                        ), String.format("%s_extended", ItemRegistry.ENDER_ITEM_CELL_HOUSING.getId())
                 );
 
         // Advanced
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, housing.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ((DeferredHolder<Item, ? extends Item>) ItemRegistry.ENDER_ITEM_CELL_HOUSING).get())
                 .pattern("aba")
                 .pattern("c c")
                 .pattern("ded")
@@ -251,10 +249,10 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('c', AEItems.SKY_DUST)
                 .define('d', AAEItems.QUANTUM_ALLOY_PLATE)
                 .define('e', Tags.Items.CHESTS_ENDER)
-                .unlockedBy(String.format("has_%s", hasItem.id().getPath()), has(hasItem.get()))
+                .unlockedBy(String.format("has_%s", AEItems.SKY_DUST.id().getPath()), has(AEItems.SKY_DUST.get()))
                 .save(output.withConditions(
                                 modLoaded("advanced_ae")
-                        ), String.format("%s_advanced", housing.getId())
+                        ), String.format("%s_advanced", ItemRegistry.ENDER_ITEM_CELL_HOUSING.getId())
                 );
     }
 
