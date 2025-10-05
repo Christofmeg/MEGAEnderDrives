@@ -1,8 +1,12 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.107'
     id 'idea'
+    id 'net.darkhax.curseforgegradle' version '1.+'
+    id 'com.modrinth.minotaur' version '2.+'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -14,7 +18,6 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version
 group = mod_group_id
 
 repositories {
@@ -32,11 +35,10 @@ repositories {
 }
 
 base {
-    archivesName = "${mod_id}-neoforge-${minecraft_version}"
+    archivesName = "${mod_id}-neoforge-${neoforge_supported_versions}"
 }
 
-// Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 
 neoForge {
     // Specify the version of NeoForge to use.
@@ -130,12 +132,12 @@ dependencies {
     // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
+    // This maps to ./libs/coolmod-${mc_version}-${coolversion}.jar
     // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation "blank:coolmod-${mc_version}:${coolmod_version}"
+    // implementation "blank:coolmod-${mc_version}:${coolversion}"
 
     // Example mod dependency using a file as dependency
-    // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
+    // implementation files("libs/coolmod-${mc_version}-${coolversion}.jar")
 
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
@@ -172,7 +174,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
-            mod_version            : mod_version,
+            version                : version,
             mod_authors            : mod_authors,
             mod_description        : mod_description
     ]
@@ -186,6 +188,10 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 neoForge.ideSyncTask generateModMetadata
+
+processResources {
+    exclude '.cache'
+}
 
 // Example configuration to allow publishing using the maven-publish plugin
 publishing {
@@ -210,5 +216,49 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = file('../API Tokens/megaenderdrives.md')
+    def projectId = "${cf_id}".toString()
+    def mainFile = upload(projectId, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")) as Object
+    mainFile.changelogType = 'markdown'
+    mainFile.changelog = file('changelog.md')
+    mainFile.addGameVersion('Client', 'Server')
+    mainFile.releaseType = "${release_type}"
+    mainFile.addModLoader("neoforge")
+    "${neoforge_release_versions}".split(',').each {
+        mainFile.addGameVersion("${it}")
+    }
+    mainFile.addRequirement("applied-energistics-2")
+    mainFile.addRequirement("enderdrives")
+    mainFile.addOptional("advancedae")
+    mainFile.addOptional("ex-pattern-provider")
+    mainFile.addOptional("guideme")
+    mainFile.addOptional("mega-cells")
+}
+
+modrinth {
+    def tokenText = file('../API Tokens/modrinth.md')
+    if (tokenText.exists()) {
+        token = tokenText.text
+    } else {
+        token = ""
+    }
+    projectId = "${modrinth_id}"
+    versionName = getArchivesBaseName() + "-" + getVersion()
+    versionType = "${release_type}"
+    changelog = file('changelog.md').text
+    uploadFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
+    gameVersions = "${neoforge_release_versions}".split(",") as List<String>
+    loaders = ["neoforge"]
+    dependencies {
+        required.project "ae2"
+        required.project "enderdrives"
+        optional.project "advancedae"
+        optional.project "extended-ae"
+        optional.project "guideme"
+        optional.project "mega"
     }
 }
