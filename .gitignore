@@ -25,5 +25,4 @@ run-data
 
 repo
 
-/NeoForge/src/generated/resources/.cache/
-/NeoForge/runs/
+/src/generated/resources/.cache/
