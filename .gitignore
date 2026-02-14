@@ -25,4 +25,4 @@ run-data
 
 repo
 
-/src/generated/resources/.cache/
+/neoforge/src/generated/resources/.cache/
